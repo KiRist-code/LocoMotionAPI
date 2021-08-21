@@ -1,10 +1,12 @@
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI
-# from mlBackend import walkingML
+from mlBackend import walkingML
+import uvicorn
 
 app = FastAPI()
-# ml = walkingML()
+ml = walkingML()
+ml.initialize()
 
 class firebase(BaseModel):
     dbname : str
