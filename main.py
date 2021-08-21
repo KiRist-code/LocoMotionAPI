@@ -1,26 +1,27 @@
-import uvicorn
-from fastapi import FastAPI
 from typing import Optional
 from pydantic import BaseModel
-from mlBackend import *
+from fastapi import FastAPI
+# from mlBackend import walkingML
 
 app = FastAPI()
+# ml = walkingML()
 
-class DB(BaseModel):
-    dbName : str
+class firebase(BaseModel):
+    dbname : str
 
 @app.get("/")
-async def app():
-    return {"message":"main api"}
+def read_root():
+    return {"message": "Hello"}
 
-@app.get("/app")
-async def app():
-    return {"message":"hi app"}
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Optional[str] = None):
+    return {"item_id": item_id, "q": q}
 
 @app.post("/app/analyze")
-async def analyze(database: DB):
-    user_data = walkingML.fetch_firebase(database.dbName)
-    user_data = walkingML.fillData(user_data)
-    result = walkingML.detect(user_data)
-    walkingML.setResult(result,database.dbName)
+async def analyze(database: firebase):
+    user_data = ml.fetch_firebase(database.dbName)
+    user_data = ml.fillData(user_data)
+    result = ml.detect(user_data)
+    ml.setResult(result,database.dbName)
     return {"message" : "success"}
